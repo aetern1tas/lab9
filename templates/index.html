@@ -3,53 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Заметки</title>
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-        header {
-            background-color: #4a90e2;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        h1 { margin: 0; }
-        
-        .container { max-width: 600px; margin: 0 auto; }
-        
-        form {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        input[type="text"] { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 8px 15px; background: #4a90e2; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        
-        ul { list-style: none; padding: 0; }
-        li {
-            background: white;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .note-text { flex: 1; margin-right: 10px; }
-        
-        .important { font-weight: bold; color: #d32f2f; }
-    </style>
+        <style>
+            body { background-color: #f0f2f5; font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+            header { background-color: #4a90e2; color: white; padding: 15px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+            h1 { margin: 0; }
+            .container { max-width: 600px; margin: 0 auto; }
+            
+            form { background: white; padding: 15px; border-radius: 8px; display: flex; gap: 10px; align-items: center; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            input[type="text"] { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+            button { padding: 8px 15px; background: #4a90e2; color: white; border: none; border-radius: 4px; cursor: pointer; }
+            .btn-clear { background-color: #e74c3c; margin-left: auto; } 
+            
+            ul { list-style: none; padding: 0; }
+            li { 
+                background: white; padding: 12px; margin-bottom: 8px; border-radius: 6px; 
+                display: flex; justify-content: space-between; align-items: center; 
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+            }
+            .note-text { flex: 1; margin-right: 10px; }
+            .important { font-weight: bold; color: #d32f2f; }
+            
+            .actions { display: flex; gap: 8px; align-items: center; }
+            .btn-del { background: #e74c3c; padding: 6px 10px; font-size: 14px; }
+            .btn-del:hover { background: #c0392b; }
+        </style>
     <script src="/static/main.js"></script>
 </head>
 <body>
@@ -60,13 +37,18 @@
             <input type="text" name="text" placeholder="Введите текст заметки..." required>
             <label><input type="checkbox" name="important"> Важно</label>
             <button type="submit">Добавить</button>
+            
+            <button type="button" class="btn-clear" onclick="clearAll()">Удалить все заметки</button>
         </form>
 
         <ul>
             {% for note in notes_list %}
-            <li>
+            <li id="note-{{ note.id }}">
                 <span class="note-text {% if note.important %}important{% endif %}">{{ note.text }}</span>
-                <input type="checkbox" onchange="toggleNote(this)" value="{{ note.id }}" {% if note.important %}checked{% endif %}>
+                <div class="actions">
+                    <input type="checkbox" onchange="toggleNote(this)" value="{{ note.id }}" {% if note.important %}checked{% endif %}>
+                    <button type="button" class="btn-del" onclick="deleteNote({{ note.id }})">Удалить</button>
+                </div>
             </li>
             {% endfor %}
         </ul>

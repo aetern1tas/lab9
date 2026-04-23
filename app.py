@@ -35,10 +35,21 @@ def add_note():
 def toggle_note(note_id):
     data = request.get_json()
     note = Note.query.get_or_404(note_id)
-    
     note.important = data.get('important')
     db.session.commit()
-    
+    return jsonify({'success': True})
+
+@app.route('/clear', methods=['DELETE'])
+def clear_notes():
+    Note.query.delete()
+    db.session.commit()
+    return jsonify({'success': True})
+
+@app.route('/delete/<int:note_id>', methods=['DELETE'])
+def delete_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    db.session.delete(note)
+    db.session.commit()
     return jsonify({'success': True})
 
 if __name__ == '__main__':
