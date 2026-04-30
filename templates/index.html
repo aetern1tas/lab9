@@ -37,23 +37,15 @@
 
         <ul>
             {% for note in notes_list %}
-            <li>
-                <span class="note-text {% if note.important %}important{% endif %}">{{ note.text }}</span>
-                <input type="checkbox" onchange="toggleNote(this)" value="{{ note.id }}" {% if note.important %}checked{% endif %}>
+<li>
+    <span class="note-text {% if note.important %}important{% endif %}">{{ note.text }}</span>
+</li>
             </li>
             {% endfor %}
         </ul>
     </div>
 
     <script>
-        function toggleNote(el) {
-            fetch('/toggle/' + el.value, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 'important': el.checked })
-            });
-        }
-
         function clearAll() {
             if (confirm("Удалить все заметки?")) {
                 fetch('/clear', { method: 'DELETE' })

@@ -3,15 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask('Notes App')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notes.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notes.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Note(db.Model):
@@ -38,14 +29,6 @@ def add_note():
         db.session.commit()
         
     return redirect(url_for('main'))
-
-@app.route('/toggle/<int:note_id>', methods=['PATCH'])
-def toggle_note(note_id):
-    data = request.get_json()
-    note = Note.query.get_or_404(note_id)
-    note.important = data.get('important')
-    db.session.commit()
-    return jsonify({'success': True})
 
 @app.route('/clear', methods=['DELETE'])
 def clear_notes():
